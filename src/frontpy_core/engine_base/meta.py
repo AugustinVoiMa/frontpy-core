@@ -1,0 +1,2 @@
+class AbstractEngineException(Exception):
+    pass
