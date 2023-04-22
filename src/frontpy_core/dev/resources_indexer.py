@@ -74,18 +74,21 @@ class ResourcesIndexer:
             self.recursive_indexing(child, depth + 1, file)
 
     def reindex(self):
-        self.ids = []
-        self.layout_ids = []
+        try:
+            self.ids = []
+            self.layout_ids = []
 
-        # index layouts
-        for file in glob.glob(join(self.resources_root, "layouts", "**.xml"), recursive=True):
-            root = ET.parse(file).getroot()
-            self.recursive_indexing(root, 0, file)
+            # index layouts
+            for file in glob.glob(join(self.resources_root, "layouts", "**.xml"), recursive=True):
+                root = ET.parse(file).getroot()
+                self.recursive_indexing(root, 0, file)
 
-        self.ids = [(i, uuid.uuid4().int) for i in self.ids]
-        self.layout_ids = [(i, uuid.uuid4().int) for i in self.layout_ids]
+            self.ids = [(i, uuid.uuid4().int) for i in self.ids]
+            self.layout_ids = [(i, uuid.uuid4().int) for i in self.layout_ids]
 
-        self.generate_resource_file()
+            self.generate_resource_file()
+        except Exception as e:
+            print(e)
 
     def generate_resource_file(self):
         res = self.template.render(ids=self.ids,
