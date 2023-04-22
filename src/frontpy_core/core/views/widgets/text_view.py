@@ -4,7 +4,7 @@ from frontpy_core.core.views.view import View
 class TextView(View):
     def __init__(self, parent, **kw_attrs):
         super(TextView, self).__init__(parent, **kw_attrs)
-        self.text = kw_attrs.get("text")
+        self._text = kw_attrs.get("text")
         self._disabled = kw_attrs.get("disabled", False)
 
     def on_create(self):
@@ -23,3 +23,12 @@ class TextView(View):
     @property
     def disabled(self):
         return self._disabled
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, text):
+        self._text = text
+        self._engine.views.widgets.text_view.update_text(self, self._engine_state_store)

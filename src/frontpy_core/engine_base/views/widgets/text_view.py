@@ -8,3 +8,7 @@ def create_state_store() -> AbstractEngineStateStore:
 
 def start_text_view(view, state_store):
     raise AbstractEngineException
+
+
+def update_text(view, state_store):
+    raise AbstractEngineException
