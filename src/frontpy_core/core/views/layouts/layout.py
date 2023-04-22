@@ -1,13 +1,13 @@
 from abc import ABC
 from typing import Union
 
-from frontpy_core.core.views.frame_controller.abstract_frame_controller import AbstractFrameController
+from frontpy_core.core.views.frame_controller.abstract_view_controller import AbstractViewController
 from frontpy_core.core.views.view import View, AbstractView
 
 
 class Layout(View, ABC):
-    def __init__(self, parent: Union[AbstractFrameController, AbstractView], **kw_attrs):
-        if isinstance(parent, AbstractFrameController):
+    def __init__(self, parent: Union[AbstractViewController, AbstractView], **kw_attrs):
+        if isinstance(parent, AbstractViewController):
             self._root = parent
             parent = None
         super(Layout, self).__init__(parent, **kw_attrs)

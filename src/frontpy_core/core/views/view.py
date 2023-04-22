@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as ET
 from abc import abstractmethod, ABC
-from typing import Optional, Type, List
+from typing import Optional, Type, List, TypeVar
 
+from frontpy_core.core.resource_manager_base import ResourceManagerBase
 from frontpy_core.core.utils import get_view_class
 from frontpy_core.engine_base.abstract_engine import AbstractEngine
 from frontpy_core.engine_base.abstract_state_store import AbstractEngineStateStore
@@ -38,15 +39,38 @@ class AbstractView(ABC):
     def engine_state_store(self):
         pass
 
+    @property
+    @abstractmethod
+    def id(self) -> int:
+        pass
+
+    @abstractmethod
+    def find_child_by_id(self, id: int):
+        pass
+
 
 class View(AbstractView, ABC):
     _engine: AbstractEngine = ...
     _engine_state_store: AbstractEngineStateStore = ...
 
-    def __init__(self, parent: Optional[AbstractView], **kw_attrs):
+    def __init__(self, parent: Optional[AbstractView], id=None, **kw_attrs):
+        self._id = id
         self._parent = parent
         self._children: List[AbstractView] = []
         self._kw_attrs = kw_attrs
+
+    @property
+    def id(self):
+        id_splits = self._id.split('/')
+        if len(id_splits) == 1:
+            resource_cat = 'id'
+            resource_name = id_splits[0]
+        elif len(id_splits) == 2:
+            resource_cat, resource_name = id_splits
+        else:
+            raise KeyError(f"Invalid id: {self._id}. "
+                           f"Id should be of format 'name' for view ids, 'resource_cat/name' for other ids.")
+        return getattr(getattr(ResourceManagerBase.get_instance(), resource_cat), resource_name)
 
     @property
     def parent(self):
@@ -114,3 +138,16 @@ class View(AbstractView, ABC):
     @property
     def layout_height(self):
         return self._kw_attrs.get('layout_height', "wrap_content")
+
+    def find_child_by_id(self, id: int) -> Optional[AbstractView]:
+        for child in self.children:
+            if child.id == id:
+                return child
+        for child in self.children:
+            target_view = child.find_child_by_id(id)
+            if target_view is not None:
+                return target_view
+        return None
+
+
+ViewSubclass = TypeVar("ViewSubclass", bound=View)

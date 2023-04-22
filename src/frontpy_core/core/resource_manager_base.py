@@ -7,14 +7,16 @@ class InstanceError(Exception):
     pass
 
 
-class ResourceManagerBase:
-    __instance = None
-
+class AbstractResourceManager:
     class id:
         pass
 
     class layout:
         pass
+
+
+class ResourceManagerBase(AbstractResourceManager):
+    __instance = None
 
     def __init__(self, app_root_path):
         ResourceManagerBase.__instance = self
@@ -25,7 +27,7 @@ class ResourceManagerBase:
         self._load_layouts_content()
 
     @staticmethod
-    def get_instance():
+    def get_instance() -> AbstractResourceManager:
         if ResourceManagerBase.__instance is None:
             raise InstanceError("ResourceManager was not initialized")
         return ResourceManagerBase.__instance
