@@ -34,3 +34,10 @@ class ButtonView(View):
     @property
     def disabled(self):
         return self._disabled
+
+    @disabled.setter
+    def disabled(self, value):
+        if self._disabled != value:
+            self._disabled = value
+            if self._engine_state_store is not None:
+                self._engine.views.widgets.button_view.set_disabled(self, self._engine_state_store)

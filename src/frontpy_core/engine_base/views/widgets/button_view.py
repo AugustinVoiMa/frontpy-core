@@ -8,3 +8,6 @@ def create_state_store() -> AbstractEngineStateStore:
 
 def start_button_view(view, state_store):
     raise AbstractEngineException
+
+def set_disabled(view, state_store):
+    raise AbstractEngineException
