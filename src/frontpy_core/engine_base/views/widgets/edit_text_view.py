@@ -10,5 +10,9 @@ def start_edit_text_view(view, state_store):
     raise AbstractEngineException
 
 
-def update_text(view, state_store):
+def current_text(view, state_store):
+    raise AbstractEngineException
+
+
+def update_text(view, state_store, text):
     raise AbstractEngineException
