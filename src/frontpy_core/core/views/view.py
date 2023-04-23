@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from abc import abstractmethod, ABC
+from collections import defaultdict
 from typing import Optional, Type, List, TypeVar
 
 from frontpy_core.core.resource_manager_base import ResourceManagerBase
@@ -58,6 +59,7 @@ class View(AbstractView, ABC):
         self._parent = parent
         self._children: List[AbstractView] = []
         self._kw_attrs = kw_attrs
+        self._events = defaultdict(list)
 
     @property
     def id(self):
@@ -148,6 +150,11 @@ class View(AbstractView, ABC):
             if target_view is not None:
                 return target_view
         return None
+
+    def add_event_listener(self, event, listener):
+        self._events[event].append(listener)
+        if self._engine_state_store is not None:
+            self._engine.views.generic_view.set_event_listeners(self, self._engine_state_store)
 
 
 ViewSubclass = TypeVar("ViewSubclass", bound=View)
