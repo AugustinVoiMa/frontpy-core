@@ -8,3 +8,7 @@ def create_state_store() -> AbstractEngineStateStore:
 
 def start_frame_controller(fc, state_store):
     raise AbstractEngineException
+
+
+def set_frame_title(fc, state_store):
+    raise AbstractEngineException

@@ -19,15 +19,15 @@ logger = logging.getLogger(__name__)
 
 
 class FrameController(AbstractViewController):
-    _engine: AbstractEngine = ...
+    _engine: AbstractEngine = None
 
-    _engine_state_store: AbstractEngineStateStore = ...
+    _engine_state_store: AbstractEngineStateStore = None
 
     def __init__(self):
         self.content_layout: Layout = ...
         self.width = 200
         self.height = 200
-        self.title = None
+        self._title = None
 
     def set_content_view(self, frame_id: int):
         R = ResourceManagerBase.get_instance()
@@ -65,3 +65,14 @@ class FrameController(AbstractViewController):
         view = self.content_layout.find_child_by_id(id)
         assert view is not None
         return view
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+        if self._engine_state_store is None:
+            return
+        self._engine.frame_controller.set_frame_title(self, self._engine_state_store)

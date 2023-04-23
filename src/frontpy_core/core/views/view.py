@@ -50,8 +50,8 @@ class AbstractView(ABC):
 
 
 class View(AbstractView, ABC):
-    _engine: AbstractEngine = ...
-    _engine_state_store: AbstractEngineStateStore = ...
+    _engine: AbstractEngine = None
+    _engine_state_store: AbstractEngineStateStore = None
 
     def __init__(self, parent: Optional[AbstractView], id=None, **kw_attrs):
         self._id = id
